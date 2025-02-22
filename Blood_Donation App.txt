@@ -1,0 +1,43 @@
+Blood_Donation Application
+
+Project Structure Overview
+
+blood-donation-backend
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── com
+│   │   │       └── blooddonation
+│   │   │           ├── BloodDonationApplication.java  // Main Spring Boot entry point
+│   │   │           ├── model
+│   │   │           │   ├── Admin.java
+│   │   │           │   ├── Appointment.java
+│   │   │           │   ├── Donation.java
+│   │   │           │   ├── BloodBank.java
+│   │   │           │   └── Donor.java
+│   │   │           ├── repository
+│   │   │           │   ├── AdminRepository.java
+│   │   │           │   ├── AppointmentRepository.java
+│   │   │           │   ├── DonationRepository.java
+│   │   │           │   ├── BloodBankRepository.java
+│   │   │           │   └── DonorRepository.java
+│   │   │           ├── service
+│   │   │           │   ├── AdminService.java
+│   │   │           │   ├── AppointmentService.java
+│   │   │           │   ├── DonationService.java
+│   │   │           │   ├── BloodBankService.java
+│   │   │           │   └── DonorService.java
+│   │   │           └── controller
+│   │   │               ├── AdminController.java
+│   │   │               ├── AppointmentController.java
+│   │   │               ├── DonationController.java
+│   │   │               ├── BloodBankController.java
+│   │   │               └── DonorController.java
+│   │   └── resources
+│   │       └── application.properties  // Contains DB and server configurations
+│   └── test
+│       └── java
+│           └── com
+│               └── blooddonation
+│                   └── (Test classes for each component)
+└── pom.xml  // Maven configuration file
