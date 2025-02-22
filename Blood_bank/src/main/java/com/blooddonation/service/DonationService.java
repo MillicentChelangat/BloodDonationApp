@@ -10,7 +10,6 @@ import java.util.NoSuchElementException;
 @Service
 public class DonationService {
 
-
     private final DonationRepository donationRepository;
 
     public DonationService(DonationRepository donationRepository) {
