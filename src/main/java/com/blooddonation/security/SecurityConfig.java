@@ -30,6 +30,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
+        String secretKey = "your-strong-secret-key"; // Replace with an actual secret key
+        return new JwtAuthenticationFilter(secretKey);
     }
 }
