@@ -26,16 +26,16 @@ public class AuthenticationService {
 
     public String registerUser(UserRegistrationDTO registrationDTO) {
         // Check if the user already exists
-        if (userRepository.findByUsername (registrationDTO.getEmail()).isPresent()) {
+        if (userRepository.findByUsernameOrEmail (registrationDTO.getEmail()).isPresent()) {
             throw new RuntimeException("User with this name  already exists!");
         }
 
         // Create new user
         User newUser = new User();
-        newUser.setName(registrationDTO.getFullName());
+        newUser.setUsername(registrationDTO.getFullName());
         newUser.setEmail(registrationDTO.getEmail());
         newUser.setPassword(passwordEncoder.encode(registrationDTO.getPassword())); // Encrypt password
-        newUser.setRole("USER"); // Default role
+
 
         // Save user to database
         userRepository.save(newUser);

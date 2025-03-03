@@ -1,0 +1,26 @@
+* [33me262da4[m[33m ([m[1;32mmain[m[33m)[m Fixed getDonorById method and test cases
+*   [33mba22877[m[33m ([m[1;31morigin/main[m[33m)[m Merge pull request #2 from MillicentChelangat/feature/authentication-update
+[32m|[m[33m\[m  
+[32m|[m [33m|[m *   [33mc94fe38[m[33m ([m[1;35mrefs/stash[m[33m)[m WIP on feature/authentication-update: ca829db Updated .gitignore to exclude META-INF
+[32m|[m [33m|[m [34m|[m[35m\[m  
+[32m|[m [33m|[m [34m|[m * [33m55caac6[m index on feature/authentication-update: ca829db Updated .gitignore to exclude META-INF
+[32m|[m [33m|[m [34m|[m[34m/[m  
+[32m|[m [33m|[m * [33mca829db[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/authentication-update[m[33m, [m[1;31morigin/feature/authentication-update[m[33m)[m Updated .gitignore to exclude META-INF
+[32m|[m [33m|[m[33m/[m  
+[32m|[m * [33me1d0f37[m Refactored project structure and added authentication services
+[32m|[m [35m|[m * [33m3fe2fc8[m[33m ([m[1;31morigin/ft-DonationController[m[33m, [m[1;32mft-DonationController[m[33m)[m Added DonationController with CRUD operations
+[32m|[m [35m|[m[35m/[m  
+[32m|[m *   [33m1d51bf8[m Merge branch 'main' of https://github.com/MillicentChelangat/BloodDonationApp
+[32m|[m [1;31m|[m[32m\[m  
+[32m|[m [1;31m|[m[32m/[m  
+[32m|[m[32m/[m[1;31m|[m   
+* [1;31m|[m   [33md2a1975[m Merge pull request #1 from MillicentChelangat/ft-donation-service
+[1;33m|[m[1;34m\[m [1;31m\[m  
+[1;33m|[m * [1;31m|[m [33m46ddb2b[m[33m ([m[1;31morigin/ft-donation-service[m[33m, [m[1;32mft-donation-service[m[33m)[m changes
+[1;33m|[m [1;34m|[m * [33m6820158[m changes
+[1;33m|[m [1;34m|[m * [33m356b957[m changes url etc
+[1;33m|[m [1;34m|[m[1;33m/[m  
+[1;33m|[m[1;33m/[m[1;34m|[m   
+* [1;34m|[m [33m80af9c4[m changes url etc
+[1;34m|[m[1;34m/[m  
+* [33m80072f0[m new chages
