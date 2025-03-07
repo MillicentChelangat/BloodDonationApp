@@ -12,5 +12,9 @@ public class UserRegistrationDTO {
     private String password;
     private String confirmPassword;
     private String role; // "DONOR" or "ADMIN"
+
+    public String getUsernameOrEmail() {
+            return (username != null && !username.isEmpty()) ? username : email;
+        }
 }
 

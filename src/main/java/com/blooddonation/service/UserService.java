@@ -22,36 +22,38 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil;  // FIX: Autowire JwtUtil instead of declaring it in the method
 
     public String register(UserRegistrationDTO request) {
-        if (userRepository.findByUsernameOrEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already in use");
+        if (userRepository.findByUsernameOrEmail(request.getUsernameOrEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email or Username already in use");
         }
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole() != null ? request.getRole() : Role.DONOR);
+        user.setRole(request.getRole() != null ? Role.valueOf(request.getRole()) : Role.DONOR);
 
         userRepository.save(user);
         return "User registered successfully!";
     }
 
     public AuthenticationResponseDTO login(AuthenticationRequestDTO request) {
-        Optional<User> userOpt = userRepository.findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail());
+        Optional<User> userOpt = userRepository.findByUsernameOrEmail(request.getUsernameOrEmail());
 
         if (userOpt.isEmpty()) {
             throw new IllegalArgumentException("Invalid credentials");
         }
+
         User user = userOpt.get();
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");
-            String token = jwtUtil.generateToken(user.getUsername());
-            return new AuthenticationResponseDTO(token);
         }
+
+        // FIX: Generate token after password validation
+        String token = jwtUtil.generateToken(user.getUsername());
+        return new AuthenticationResponseDTO(token);
     }
 }
-
-

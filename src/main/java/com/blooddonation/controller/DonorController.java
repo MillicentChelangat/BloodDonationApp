@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/donors")
@@ -26,21 +26,14 @@ public class DonorController {
 
     // Get a donor by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Donor> getDonor(@PathVariable Long id) {
-        Optional<Donor> donor = donorService.getDonor(id);
+    public ResponseEntity<Donor> findDonorById(@PathVariable Long id) {
+        Optional<Donor> donor = Optional.ofNullable(donorService.findDonorById(id));
+
         return donor.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Donor> getDonorById(@PathVariable Long id) {
-        Donor donor = donorService.getDonorById(id)
-                .orElseThrow(() -> new RuntimeException("Donor not found with ID:" +id)
-        );
-        return new ResponseEntity<>(donor, HttpStatus.OK);
-    }
-
-    // Create a new donor (choose this endpoint for creating a donor)
+    // Create a new donor
     @PostMapping
     public ResponseEntity<Donor> createDonor(@RequestBody Donor donor) {
         Donor savedDonor = donorService.saveDonor(donor);

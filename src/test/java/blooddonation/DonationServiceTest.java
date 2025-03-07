@@ -1,6 +1,7 @@
 package blooddonation;
 
 import com.blooddonation.model.Donation;
+import com.blooddonation.model.Donor;
 import com.blooddonation.repository.DonationRepository;
 import com.blooddonation.service.DonationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,14 +26,16 @@ class DonationServiceTest {
     private DonationService donationService;
 
     private Donation donation;
+    private Donor donor;
 
     @BeforeEach
     void setUp() {
+        donor = new Donor(1L, "John Doe", "O+"); // Creating a Donor object
         donation = new Donation();
         donation.setId(1L);
         donation.setBloodType("A+");
         donation.setQuantity(500);
-        donation.setDonorId(1L);
+        donation.setDonor(donor);  // Corrected: Assigning a Donor object
     }
 
     @Test
@@ -41,6 +44,7 @@ class DonationServiceTest {
         Donation found = donationService.getDonation(1L);
         assertEquals(1L, found.getId());
         assertEquals("A+", found.getBloodType());
+        assertEquals(1L, found.getDonor().getId()); // Corrected: Accessing donor's ID properly
 
         verify(donationRepository, times(1)).findById(1L);
     }
@@ -90,7 +94,7 @@ class DonationServiceTest {
         updatedDetails.setId(1L);
         updatedDetails.setBloodType("O+");
         updatedDetails.setQuantity(500);
-        updatedDetails.setDonorId(1L);
+        updatedDetails.setDonor(new Donor(1L, "John Doe", "O+")); // Corrected: Setting a Donor object
 
         when(donationRepository.findById(1L)).thenReturn(Optional.of(donation));
         when(donationRepository.save(any(Donation.class))).thenReturn(updatedDetails);
@@ -98,9 +102,9 @@ class DonationServiceTest {
         Donation updated = donationService.updateDonation(1L, updatedDetails);
         assertEquals(500, updated.getQuantity());
         assertEquals("O+", updated.getBloodType());
+        assertEquals(1L, updated.getDonor().getId()); // Corrected: Verifying donor ID
 
         verify(donationRepository, times(1)).findById(1L);
         verify(donationRepository, times(1)).save(any(Donation.class));
     }
 }
-

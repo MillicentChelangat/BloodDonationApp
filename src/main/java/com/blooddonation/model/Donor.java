@@ -2,28 +2,42 @@ package com.blooddonation.model;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Setter
 @Getter
 @Entity
+@Table(name = "donors") // Optional: Ensures table name is explicitly set
 public class Donor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "donor_id", nullable = false)
+    private String donorID;
 
+    @Column(name = "full_name", nullable = false)
     private String fullName;
+
+    @Column(name = "gender", nullable = false)
     private String gender;
+
+    @Column(name = "date_of_birth", nullable = false)
     private String dateOfBirth;
+
+    @Column(name = "blood_type", nullable = false)
     private String bloodType;
+
+    @Column(name = "contact_number", nullable = false, unique = true)
     private String contactNumber;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "address", nullable = false)
     private String address;
+
+    @Column(name = "last_donation_date")
     private String lastDonationDate;
 
     // Constructor for Donor with all fields (except id since it is auto-generated)
@@ -53,7 +67,6 @@ public class Donor {
     }
 
     public Donor() {
-
     }
 
     public String getName() {
@@ -65,7 +78,6 @@ public class Donor {
     }
 
     public Object orElseThrow() {
-        // Check for critical fields (you can add more checks based on your business logic)
         if (this.fullName == null || this.fullName.isEmpty()) {
             throw new RuntimeException("Donor fullName is required");
         }
@@ -75,8 +87,6 @@ public class Donor {
         if (this.id == null) {
             throw new RuntimeException("Donor ID is required");
         }
-
-        // If everything is valid, return the current object
         return this;
     }
 }

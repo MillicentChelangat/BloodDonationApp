@@ -38,10 +38,12 @@ class DonationTest {
     }
 
     @Test
-    void testSetAndGetDonorId() {
-        donation.setDonorId(1L);
-        assertEquals(1L, donation.getDonorId());
+    void testSetAndGetDonor() {
+        Donor donor = new Donor(1L, "John Doe", "O+"); // Create a Donor object
+        donation.setDonor(donor); // Set the donor
+        assertEquals(1L, donation.getDonor().getId()); // Get donor's ID
     }
+
 
     @Test
     void testDonationCreation() {

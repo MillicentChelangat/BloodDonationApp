@@ -26,8 +26,9 @@ public class AuthenticationService {
 
     public String registerUser(UserRegistrationDTO registrationDTO) {
         // Check if the user already exists
-        if (userRepository.findByUsernameOrEmail (registrationDTO.getEmail()).isPresent()) {
-            throw new RuntimeException("User with this name  already exists!");
+        Optional<User> existingUser = userRepository.findByUsernameOrEmail(registrationDTO.getEmail());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("User with this email already exists!");
         }
 
         // Create new user
@@ -36,7 +37,6 @@ public class AuthenticationService {
         newUser.setEmail(registrationDTO.getEmail());
         newUser.setPassword(passwordEncoder.encode(registrationDTO.getPassword())); // Encrypt password
 
-
         // Save user to database
         userRepository.save(newUser);
 
@@ -44,13 +44,13 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
-        Optional<User> userOptional = userRepository.findByUsernameOrEmail(request.getUsername());
-        if (userOptional.isPresent() && passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
-            String token = jwtUtil.generateToken(request.getUsername());
-            return new AuthenticationResponseDTO(token);
-        } else {
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(request.getUsernameOrEmail());
+
+        if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
+
+        String token = jwtUtil.generateToken(userOptional.get().getUsername());
+        return new AuthenticationResponseDTO(token);
     }
 }
-

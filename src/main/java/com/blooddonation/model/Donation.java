@@ -18,40 +18,35 @@ public class Donation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Link donation to a donor
     @ManyToOne
     @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
 
-    // Store donor ID separately if needed for testing
-    private Long donorId;
-
-    // The date when the donation was made
+    @Column(nullable = false)
     private LocalDate donationDate;
 
-    // The quantity donated (e.g., in milliliters)
+    @Column(nullable = false)
     private Integer quantity;
 
-    // Blood type of the donor
+    @Column(nullable = false)
     private String bloodType;
 
-    // Donation location
+    @Column(nullable = false)
     private String location;
 
     public Donation(Donor donor, LocalDate donationDate, Integer quantity, String location, String bloodType) {
         this.donor = donor;
-        this.donorId = (donor != null) ? donor.getId() : null; // Store donor ID separately
         this.donationDate = donationDate;
         this.quantity = quantity;
         this.location = location;
         this.bloodType = bloodType;
     }
 
-    public Donation(Donor donor, LocalDate donationDate, int quantity, String location) {
+    public Donation(Donor donor, LocalDate donationDate, Integer quantity, String location) {
         this.donor = donor;
         this.donationDate = donationDate;
         this.quantity = quantity;
         this.location = location;
+        this.bloodType = (donor != null) ? donor.getBloodType() : null;
     }
-
 }

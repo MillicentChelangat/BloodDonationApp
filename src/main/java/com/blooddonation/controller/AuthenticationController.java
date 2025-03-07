@@ -3,12 +3,10 @@ package com.blooddonation.controller;
 import com.blooddonation.dto.AuthenticationRequestDTO;
 import com.blooddonation.dto.AuthenticationResponseDTO;
 import com.blooddonation.dto.UserRegistrationDTO;
-import com.blooddonation.model.User;
 import com.blooddonation.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
