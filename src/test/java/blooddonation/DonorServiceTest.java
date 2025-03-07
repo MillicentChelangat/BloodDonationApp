@@ -1,19 +1,28 @@
 package blooddonation;
 
 import com.blooddonation.model.Donor;
+import com.blooddonation.repository.DonorRepository;
 import com.blooddonation.service.DonorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+
 
 class DonorServiceTest {
 
     @Mock
-    private DonorService donorService;
+    private DonorRepository donorRepository; // Fix repository mock
+
+    @InjectMocks
+    private DonorService donorService; // Inject DonorService
 
     private Donor donor;
 
@@ -21,12 +30,12 @@ class DonorServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         donor = new Donor("John Doe", "O+");
-        donor.setId(1L);  // Ensure the donor has an ID if needed
+        donor.setId(1L);
     }
 
     @Test
     void testAddDonor() {
-        when(donorService.addDonor(donor)).thenReturn(donor);
+        when(donorRepository.save(donor)).thenReturn(donor);
 
         Donor savedDonor = donorService.addDonor(donor);
         assertNotNull(savedDonor);
@@ -36,23 +45,25 @@ class DonorServiceTest {
 
     @Test
     void testFindDonorById() {
-        // Stub to return donor directly (not Optional)
-        when(donorService.findDonorById(1L)).thenReturn(donor);
+        when(donorRepository.findById(1L)).thenReturn(Optional.of(donor));
 
-        Donor foundDonor = donorService.findDonorById(1L);
-        assertNotNull(foundDonor);
-        assertEquals("John Doe", foundDonor.getName());
-        assertEquals("O+", foundDonor.getBloodGroup());
+        Donor result = donorService.findDonorById(1L);
+        assertNotNull(result);
+        assertEquals(donor, result);
     }
 
     @Test
     void testUpdateDonor() {
+        when(donorRepository.findById(1L)).thenReturn(Optional.of(donor));
         Donor updatedDonor = new Donor("John Doe", "AB+");
         updatedDonor.setId(1L);
-        when(donorService.updateDonor(1L, updatedDonor)).thenReturn(updatedDonor);
+        when(donorRepository.save(any())).thenReturn(updatedDonor);
+
 
         Donor result = donorService.updateDonor(1L, updatedDonor);
+
         assertNotNull(result);
         assertEquals("AB+", result.getBloodGroup());
     }
+
 }

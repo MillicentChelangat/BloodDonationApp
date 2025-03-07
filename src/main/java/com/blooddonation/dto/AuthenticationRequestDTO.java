@@ -12,7 +12,4 @@ import lombok.AllArgsConstructor;
 public class AuthenticationRequestDTO {
     private String usernameOrEmail;
     private String password;
-
-    public String getUsername() {
-    }
 }

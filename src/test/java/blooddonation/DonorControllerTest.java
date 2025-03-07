@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
@@ -51,12 +50,13 @@ public class DonorControllerTest {
     }
 
     @Test
-    void testGetDonor() {
+    void testFindDonorById() {
         // Stub the service method to return an Optional containing testDonor for ID 1
-        when(donorService.getDonor(1L)).thenReturn(Optional.of(testDonor));
+        Donor donor = new Donor("John Doe", "O+");
+        when(donorService.findDonorById(1L)).thenReturn(testDonor);
 
         // Call the getDonor endpoint
-        ResponseEntity<Donor> response = donorController.getDonor(1L);
+        ResponseEntity<Donor> response = donorController.findDonorById(1L);
 
         // Verify that the response has a 200 OK status and the correct donor details
         assertEquals(HttpStatus.OK, response.getStatusCode());
