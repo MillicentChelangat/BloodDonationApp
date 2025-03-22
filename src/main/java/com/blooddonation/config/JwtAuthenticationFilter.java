@@ -2,9 +2,12 @@ package com.blooddonation.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,49 +15,54 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final String secretKey;
+    private final Key secretKey;
 
-    // Constructor to receive secretKey
-    public JwtAuthenticationFilter(String secretKey) {
-        this.secretKey = secretKey;
+    public JwtAuthenticationFilter(String secret) {
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Extract the token from the request
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
-            String jwt = token.substring(7); // Remove "Bearer " prefix
+            String jwt = token.substring(7);
             try {
-                // Validate JWT and extract claims
-                Claims claims = Jwts.parser()
+                Claims claims = Jwts.parserBuilder()
                         .setSigningKey(secretKey)
+                        .build()
                         .parseClaimsJws(jwt)
                         .getBody();
 
-                String username = claims.getSubject(); // Extract user info
+                String username = claims.getSubject();
+                List<GrantedAuthority> authorities = getAuthoritiesFromClaims(claims);
 
                 if (username != null) {
-                    // Create authentication token
                     Authentication authentication =
-                            new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
-
-                    // Set authentication in the security context
+                            new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             } catch (Exception e) {
                 System.out.println("Invalid or expired JWT: " + e.getMessage());
-                SecurityContextHolder.clearContext(); // Clear authentication if token is invalid
+                SecurityContextHolder.clearContext();
             }
         }
 
-        filterChain.doFilter(request, response); // Continue with the request
+        filterChain.doFilter(request, response);
+    }
+
+    private List<GrantedAuthority> getAuthoritiesFromClaims(Claims claims) {
+        List<String> roles = claims.get("roles", List.class);
+        return roles != null ? roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()) : Collections.emptyList();
     }
 }

@@ -46,9 +46,21 @@ public class AuthenticationService {
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
         Optional<User> userOptional = userRepository.findByUsernameOrEmail(request.getUsernameOrEmail());
 
-        if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
+
+        if (userOptional.isEmpty()) {
+            System.out.println("User not found: " + request.getUsernameOrEmail());
             throw new RuntimeException("Invalid credentials");
         }
+
+        User user = userOptional.get();
+        System.out.println("Stored password: " + user.getPassword());
+        System.out.println("Entered password: " + request.getPassword());
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            System.out.println("Password mismatch!");
+            throw new RuntimeException("Invalid credentials");
+        }
+
 
         String token = jwtUtil.generateToken(userOptional.get().getUsername());
         return new AuthenticationResponseDTO(token);

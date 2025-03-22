@@ -11,13 +11,12 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "YourSecretKeyForJWTShouldBeLongEnough";
+    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        return SECRET_KEY;
     }
-
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -28,7 +27,15 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token, String username) {
-        return username.equals(extractUsername(token)) && !isTokenExpired(token);
+        try {
+            return username.equals(extractUsername(token)) && !isTokenExpired(token);
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token expired!");
+            return false;
+        } catch (JwtException e) {
+            System.out.println("Invalid token!");
+            return false;
+        }
     }
 
     public String extractUsername(String token) {

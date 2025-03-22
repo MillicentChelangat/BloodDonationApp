@@ -1,4 +1,4 @@
-package blooddonation;
+package blooddonation.Controller;
 
 import com.blooddonation.controller.DonorController;
 import com.blooddonation.model.Donor;
@@ -12,6 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
@@ -27,12 +30,17 @@ public class DonorControllerTest {
     private DonorController donorController; // Inject the mocked service into the controller
 
     private Donor testDonor;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 
     @BeforeEach
     public void setup() {
+        // Convert String to LocalDate
+        LocalDate dateOfBirth = LocalDate.parse("01/01/1990", formatter);
+        LocalDate lastDonationDate = LocalDate.parse("01/01/2025", formatter);
         // Create a sample donor for testing
-        testDonor = new Donor("John Doe", "Male", "01/01/1990", "O+", "1234567890",
-                "johndoe@example.com", "123 Street", "2025-01-01");
+        testDonor = new Donor(1L, "John Doe", "Male", dateOfBirth, "A+", "0734567890",
+                "johndoe@example.com", "123 Street Name", lastDonationDate);
     }
 
     @Test
@@ -52,7 +60,7 @@ public class DonorControllerTest {
     @Test
     void testFindDonorById() {
         // Stub the service method to return an Optional containing testDonor for ID 1
-        Donor donor = new Donor("John Doe", "O+");
+        Donor donor = new Donor(1L, "John Doe", "A+");
         when(donorService.findDonorById(1L)).thenReturn(testDonor);
 
         // Call the getDonor endpoint

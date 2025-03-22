@@ -16,37 +16,35 @@ public class Donation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "donation_id", nullable = false, unique = true)
+    private Long donationId;
 
     @ManyToOne
     @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
 
-    @Column(nullable = false)
+    @Column(name = "donation_date", nullable = false)
     private LocalDate donationDate;
 
-    @Column(nullable = false)
-    private Integer quantity;
-
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String bloodType;
+
+    @Column(name = "donation_impact", columnDefinition = "INT DEFAULT 1")
+    private Integer donationImpact;
 
     @Column(nullable = false)
     private String location;
 
-    public Donation(Donor donor, LocalDate donationDate, Integer quantity, String location, String bloodType) {
-        this.donor = donor;
-        this.donationDate = donationDate;
-        this.quantity = quantity;
-        this.location = location;
-        this.bloodType = bloodType;
-    }
+    @Column(nullable = false)
+    private Integer quantity;
 
-    public Donation(Donor donor, LocalDate donationDate, Integer quantity, String location) {
+    // Constructor ensuring correct parameter order and consistency
+    public Donation(Donor donor, LocalDate donationDate, Integer quantity, String bloodType, String location) {
         this.donor = donor;
         this.donationDate = donationDate;
         this.quantity = quantity;
+        this.bloodType = bloodType;
         this.location = location;
-        this.bloodType = (donor != null) ? donor.getBloodType() : null;
+        this.donationImpact = 1; // Default impact set in Java as well
     }
 }
