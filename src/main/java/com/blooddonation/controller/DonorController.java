@@ -21,6 +21,9 @@ public class DonorController {
     @GetMapping
     public ResponseEntity<List<Donor>> getAllDonors() {
         List<Donor> donors = donorService.getAllDonors();
+        if (donors.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 instead of 400
+        }
         return ResponseEntity.ok(donors);
     }
 

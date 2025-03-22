@@ -3,46 +3,61 @@ package com.blooddonation.model;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
 
-@Setter
 @Getter
+@Setter
 @Entity
-@Table(name = "donors") // Optional: Ensures table name is explicitly set
+@Table(name = "donors")
 public class Donor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "donor_id", nullable = false)
-    private String donorID;
 
+    @NotNull
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
+    @NotNull
     @Column(name = "gender", nullable = false)
     private String gender;
 
+    @NotNull
     @Column(name = "date_of_birth", nullable = false)
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
+    @NotNull
     @Column(name = "blood_type", nullable = false)
     private String bloodType;
 
+    @NotNull
     @Column(name = "contact_number", nullable = false, unique = true)
     private String contactNumber;
 
+    @NotNull
+    @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NotNull
     @Column(name = "address", nullable = false)
     private String address;
 
     @Column(name = "last_donation_date")
-    private String lastDonationDate;
+    private LocalDate lastDonationDate;
 
-    // Constructor for Donor with all fields (except id since it is auto-generated)
-    public Donor(String fullName, String gender, String dateOfBirth, String bloodType,
-                 String contactNumber, String email, String address, String lastDonationDate) {
+    @OneToMany(mappedBy = "donor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Appointment> appointments;
+
+    // Corrected Constructor for creating a new Donor
+    public Donor(Long id, String fullName, String gender, LocalDate dateOfBirth,
+                 String bloodType, String contactNumber, String email, String address,
+                 LocalDate lastDonationDate) {
+        this.id = id;
         this.fullName = fullName;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
@@ -53,40 +68,14 @@ public class Donor {
         this.lastDonationDate = lastDonationDate;
     }
 
-    // Constructor without the id for creating a new donor
-    public Donor(String fullName, String bloodType) {
-        this.fullName = fullName;
-        this.bloodType = bloodType;
-    }
-
-    // Default constructor (required for JPA)
+    // Optional: Constructor with limited fields (useful in some cases)
     public Donor(Long id, String fullName, String bloodType) {
         this.id = id;
         this.fullName = fullName;
         this.bloodType = bloodType;
     }
 
+    // Default constructor required for JPA
     public Donor() {
-    }
-
-    public String getName() {
-        return this.fullName;
-    }
-
-    public String getBloodGroup() {
-        return this.bloodType;
-    }
-
-    public Object orElseThrow() {
-        if (this.fullName == null || this.fullName.isEmpty()) {
-            throw new RuntimeException("Donor fullName is required");
-        }
-        if (this.bloodType == null || this.bloodType.isEmpty()) {
-            throw new RuntimeException("Donor bloodType is required");
-        }
-        if (this.id == null) {
-            throw new RuntimeException("Donor ID is required");
-        }
-        return this;
     }
 }

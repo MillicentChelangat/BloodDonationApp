@@ -23,7 +23,6 @@ public class User {
     private Role role;
 
     public User() {
-
     }
 
     public User(String username, String email, String password, Role role) {

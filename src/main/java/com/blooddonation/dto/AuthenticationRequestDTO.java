@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 
 @Getter
 @Setter
-@NoArgsConstructor  // Generates a no-argument constructor
-@AllArgsConstructor // Generates a constructor with all fields
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthenticationRequestDTO {
     private String usernameOrEmail;
     private String password;
